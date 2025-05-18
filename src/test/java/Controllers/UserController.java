@@ -11,7 +11,6 @@ import io.restassured.specification.RequestSpecification;
 import io.qameta.allure.restassured.AllureRestAssured;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import static Constants.Constants.*;
 import static io.restassured.RestAssured.given;
@@ -49,13 +48,6 @@ public class UserController {
                 .put(USER_ENDPOINT + "/" + user.getUsername())
                 .andReturn();
     }
-//
-//    @Step("get user by username")
-//    public Response getUserByName(String username){
-//        return given(requestSpecification)
-//                .get(USER_ENDPOINT + "/" + username)
-//                .andReturn();
-//    }
 
     @Step("delete user")
     public Response deleteUser(String username){
@@ -63,16 +55,6 @@ public class UserController {
                 .delete(USER_ENDPOINT + "/" + username)
                 .andReturn();
     }
-//
-//    @Step("wait until user will be created")
-//    public void waitForUser(String username){
-//        await()
-//                .atMost(10, SECONDS)
-//                .pollInterval(500, MILLISECONDS)
-//                .until(() -> {
-//                    return this.getUserByName(username).statusCode() == 200;
-//                });
-//    }
 
     @Step("get user and wait until he appears")
     public Response getUserByName(String username) {
