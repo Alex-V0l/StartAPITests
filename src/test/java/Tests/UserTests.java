@@ -3,8 +3,6 @@ package Tests;
 import Controllers.BasicResponse;
 import Controllers.UserController;
 import Models.User;
-import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
@@ -15,16 +13,11 @@ public class UserTests {
 
     UserController userController = new UserController();
 
-    @BeforeAll
-    static void setup() {
-        RestAssured.defaultParser = Parser.JSON;
-    }
-
     @BeforeEach
     @AfterEach
     void clearTestData(){
-        userController.deleteUser(DEFAULT_USER.getUsername());
-        userController.deleteUser(INVALID_USER.getUsername());
+        userController.deleteUserAndWait(DEFAULT_USER.getUsername());
+        userController.deleteUserAndWait(INVALID_USER.getUsername());
     }
 
     @DisplayName("create new user")
@@ -44,7 +37,6 @@ public class UserTests {
         softly.assertThat(createdUserResponse.getType()).as("Values must be equal").isEqualTo(expectedResponseType);
         softly.assertThat(actualMessage.matches("\\d+")).as("Message must contain only digits (unique number)").isTrue();
         softly.assertAll();
-        userController.deleteUser(DEFAULT_USER.getUsername());
     }
 
     @DisplayName("create user without any fields ")
@@ -66,25 +58,29 @@ public class UserTests {
         softly.assertAll();
     }
 
-    @DisplayName("create user and compare it with template")
+    @DisplayName("create user and compare it with response body")
     @Tags({@Tag("smoke"), @Tag("API")})
     @Test
     void createAndCheckUserTest(){
         User expectedUser = new User
-                (33397108721110L,
-                "Just created expected user",
-                "Steven",
-                "Rogers",
-                "StevenRogers1899@gmail.com",
-                "DestroyNaziRegime",
-                "098123756",
+                (792345098L,
+                "Another user with new unique name to create",
+                "Travis",
+                "Barker",
+                "blinkdrums@gmail.com",
+                "loveplayingpunk",
+                "69871743509",
                 0);
 
         BasicResponse afterCreationResponse = userController.createUser(expectedUser).as(BasicResponse.class);
 
         assertThat(afterCreationResponse.getCode()).isEqualTo(200);
 
-        User createdUser = userController.getUserByName(expectedUser.getUsername()).as(User.class);
+        Response createdUserResponse = userController.getUserByName(expectedUser.getUsername());
+
+        assertThat(createdUserResponse.statusCode()).isEqualTo(200);
+
+        User createdUser = createdUserResponse.as(User.class);
 
         assertThat(createdUser).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedUser);
     }
@@ -93,25 +89,39 @@ public class UserTests {
     @Tags({@Tag("smoke"), @Tag("API")})
     @Test
     void createAndDeleteUserTest(){
-        BasicResponse createdUserResponse = userController.createUser(DEFAULT_USER).as(BasicResponse.class);
+        User expectedUser = new User
+                (603714591L,
+                        "absolutely brand new user to create for petstore",
+                        "Ralph",
+                        "Feinnes",
+                        "avadakedavra@gmail.com",
+                        "nagaina",
+                        "67143598",
+                        0);
+
+        BasicResponse createdUserResponse = userController.createUser(expectedUser).as(BasicResponse.class);
 
         assertThat(createdUserResponse.getCode()).isEqualTo(200);
 
-        Response getCreatedUserResponse = userController.getUserByName(DEFAULT_USER.getUsername());
+        Response getCreatedUserResponse = userController.getUserByName(expectedUser.getUsername());
 
         assertThat(getCreatedUserResponse.statusCode()).isEqualTo(200);
 
         User createdUser = getCreatedUserResponse.as(User.class);
 
-        assertThat(createdUser).usingRecursiveComparison().ignoringFields("id").isEqualTo(DEFAULT_USER);
+        assertThat(createdUser).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedUser);
 
-        BasicResponse deleteUserResponse = userController.deleteUser(createdUser.getUsername()).as(BasicResponse.class);
+        Response deleteUserResponse = userController.deleteUserAndWait(createdUser.getUsername());
 
-        assertThat(deleteUserResponse.getCode()).isEqualTo(200);
+        assertThat(deleteUserResponse.statusCode()).isEqualTo(200);
 
-        Response getDeletedUserResponse = userController.getUserByName(DEFAULT_USER.getUsername());
+        BasicResponse getDeletedUserResponse = userController.waitUntilUserIsDeleted(expectedUser.getUsername()).as(BasicResponse.class);
 
-        assertThat(getDeletedUserResponse.statusCode()).isEqualTo(404);
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(getDeletedUserResponse.getCode()).isEqualTo(1);
+        softly.assertThat(getDeletedUserResponse.getType()).isEqualTo("error");
+        softly.assertThat(getDeletedUserResponse.getMessage()).isEqualTo("User not found");
+        softly.assertAll();
     }
 
     @DisplayName("create user and update its value")
@@ -128,7 +138,7 @@ public class UserTests {
                 "+79068713245093",
                 0);
 
-        userController.deleteUser(userToCreate.getUsername());
+        userController.deleteUserAndWait(userToCreate.getUsername());
 
         BasicResponse createdUserResponse = userController.createUser(userToCreate).as(BasicResponse.class);
 
@@ -152,7 +162,7 @@ public class UserTests {
                 "+79068713245093",
                 0);
 
-        userController.deleteUser(userToUpdate.getUsername());
+        userController.deleteUserAndWait(userToUpdate.getUsername());
 
         Response updatedUserResponse = userController.updateUser(userToUpdate);
 
@@ -169,6 +179,6 @@ public class UserTests {
         softly.assertThat(updatedUser.getLastName()).isEqualTo("None");
         softly.assertAll();
 
-        userController.deleteUser(updatedUser.getUsername());
+        userController.deleteUserAndWait(updatedUser.getUsername());
     }
 }
