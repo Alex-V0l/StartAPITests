@@ -11,6 +11,7 @@ import io.restassured.specification.RequestSpecification;
 import io.qameta.allure.restassured.AllureRestAssured;
 
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import static Constants.Constants.*;
 import static io.restassured.RestAssured.given;
@@ -42,17 +43,10 @@ public class UserController {
     }
 
     @Step("update user")
-    public Response updateUser(User user){
+    public Response updateUser(User user, String username){
         return given(requestSpecification)
                 .body(user)
-                .put(USER_ENDPOINT + "/" + user.getUsername())
-                .andReturn();
-    }
-
-    @Step("delete user")
-    public Response deleteUser(String username){
-        return given(requestSpecification)
-                .delete(USER_ENDPOINT + "/" + username)
+                .put(USER_ENDPOINT + "/" + username)
                 .andReturn();
     }
 
@@ -75,8 +69,16 @@ public class UserController {
         return response;
     }
 
+    @Step("delete user")
+    public Response clearUser(String username){
+        return given(this.requestSpecification)
+                .when()
+                .delete(USER_ENDPOINT + "/" + username)
+                .andReturn();
+    }
+
     @Step("delete user and wait until he disappears")
-    public Response deleteUserAndWait(String username) {
+    public Response deleteUser(String username) {
         Response deleteResponse = given(requestSpecification)
                 .delete(USER_ENDPOINT + "/" + username)
                 .andReturn();

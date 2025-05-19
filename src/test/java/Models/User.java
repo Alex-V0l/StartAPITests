@@ -12,7 +12,8 @@ public class User {
     private String phone;
     private int userStatus;
 
-    public User(long id, String username, String firstName, String lastName, String email, String password, String phone, int userStatus) {
+    public User(long id, String username, String firstName, String lastName, String email, String password,
+                String phone, int userStatus) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -94,7 +95,10 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && userStatus == user.userStatus && Objects.equals(username, user.username) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(phone, user.phone);
+        return id == user.id && userStatus == user.userStatus && Objects.equals(username, user.username)
+                && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName)
+                && Objects.equals(email, user.email) && Objects.equals(password, user.password)
+                && Objects.equals(phone, user.phone);
     }
 
     @Override
