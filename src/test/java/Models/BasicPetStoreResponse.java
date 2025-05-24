@@ -1,8 +1,8 @@
-package Controllers;
+package Models;
 
 import java.util.Objects;
 
-public class BasicResponse {
+public class BasicPetStoreResponse {
 
     private int code;
     private String type;
@@ -35,7 +35,7 @@ public class BasicResponse {
 
     @Override
     public String toString() {
-        return "BasicResponse{" +
+        return "BasicPetStoreResponse{" +
                 "code=" + code +
                 ", type='" + type + '\'' +
                 ", message='" + message + '\'' +
@@ -45,7 +45,7 @@ public class BasicResponse {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        BasicResponse that = (BasicResponse) o;
+        BasicPetStoreResponse that = (BasicPetStoreResponse) o;
         return code == that.code && Objects.equals(type, that.type) && Objects.equals(message, that.message);
     }
 

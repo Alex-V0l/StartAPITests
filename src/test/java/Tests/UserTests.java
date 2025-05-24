@@ -1,8 +1,9 @@
 package Tests;
 
-import Controllers.BasicResponse;
+import Models.BasicPetStoreResponse;
 import Controllers.UserController;
 import Models.User;
+import io.qameta.allure.Flaky;
 import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
@@ -28,7 +29,7 @@ public class UserTests {
         String expectedResponseType = "unknown";
 
         Response actualResponse = userController.createUser(DEFAULT_USER);
-        BasicResponse createdUserResponse  = actualResponse.as(BasicResponse.class);
+        BasicPetStoreResponse createdUserResponse  = actualResponse.as(BasicPetStoreResponse.class);
         String actualMessage = createdUserResponse.getMessage();
 
         SoftAssertions softly = new SoftAssertions();
@@ -47,7 +48,7 @@ public class UserTests {
         String expectedResponseType = "unknown";
 
         Response actualResponse = userController.createUser(INVALID_USER);
-        BasicResponse createdUserResponse  = actualResponse.as(BasicResponse.class);
+        BasicPetStoreResponse createdUserResponse  = actualResponse.as(BasicPetStoreResponse.class);
         String actualMessage = createdUserResponse.getMessage();
 
         SoftAssertions softly = new SoftAssertions();
@@ -64,7 +65,7 @@ public class UserTests {
     void createAndCheckUserTest(){
         String expectedMessage = String.valueOf(DEFAULT_USER.getId());
 
-        BasicResponse afterCreationResponse = userController.createUser(DEFAULT_USER).as(BasicResponse.class);
+        BasicPetStoreResponse afterCreationResponse = userController.createUser(DEFAULT_USER).as(BasicPetStoreResponse.class);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(afterCreationResponse.getCode()).isEqualTo(200);
@@ -82,11 +83,12 @@ public class UserTests {
     }
 
     @DisplayName("create user and delete it")
-    @Tags({@Tag("smoke"), @Tag("API")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("only with awaitility")})
+    @Flaky
     @Test
     void createAndDeleteUserTest(){
         String expectedMessage = String.valueOf(DEFAULT_USER.getId());
-        BasicResponse createdUserResponse = userController.createUser(DEFAULT_USER).as(BasicResponse.class);
+        BasicPetStoreResponse createdUserResponse = userController.createUser(DEFAULT_USER).as(BasicPetStoreResponse.class);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(createdUserResponse.getCode()).isEqualTo(200);
@@ -106,8 +108,8 @@ public class UserTests {
 
         assertThat(deleteUserResponse.statusCode()).isEqualTo(200);
 
-        BasicResponse getDeletedUserResponse = userController.waitUntilUserIsDeleted(DEFAULT_USER.getUsername())
-                .as(BasicResponse.class);
+        BasicPetStoreResponse getDeletedUserResponse = userController.waitUntilUserIsDeleted(DEFAULT_USER.getUsername())
+                .as(BasicPetStoreResponse.class);
 
         softly.assertThat(getDeletedUserResponse.getCode()).isEqualTo(1);
         softly.assertThat(getDeletedUserResponse.getType()).isEqualTo("error");
@@ -116,7 +118,8 @@ public class UserTests {
     }
 
     @DisplayName("create user and update its value")
-    @Tags({@Tag("smoke"), @Tag("API")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("with awaitility")})
+    @Flaky
     @Test
     void createAndUpdateUserTest(){
         String expectedMessage = String.valueOf(DEFAULT_USER.getId());
@@ -130,7 +133,7 @@ public class UserTests {
                         "+5781438",
                         0);
 
-        BasicResponse createdUserResponse = userController.createUser(DEFAULT_USER).as(BasicResponse.class);
+        BasicPetStoreResponse createdUserResponse = userController.createUser(DEFAULT_USER).as(BasicPetStoreResponse.class);
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(createdUserResponse.getCode()).isEqualTo(200);

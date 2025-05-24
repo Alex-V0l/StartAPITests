@@ -11,7 +11,6 @@ import io.restassured.specification.RequestSpecification;
 import io.qameta.allure.restassured.AllureRestAssured;
 
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 import static Constants.Constants.*;
 import static io.restassured.RestAssured.given;
