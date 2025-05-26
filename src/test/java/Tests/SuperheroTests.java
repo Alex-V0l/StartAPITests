@@ -109,7 +109,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero without phone, get hero and check status code")
-    @Tags({@Tag("smoke"), @Tag("API"), @Tag("will fail"), @Tag("Reason: get sometimes finds hero with different id")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: get-response sometimes finds hero with wrong id (actualId-1 or model to create without id)")})
+    @Flaky
     @Test
     void createAndGetHeroNoPhone() throws InterruptedException {
         Superhero createHeroResponse = fluentSuperheroController.createHero(HERO_WITHOUT_PHONE)
@@ -121,7 +123,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero without phone, get hero, check status code and response body")
-    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"), @Tag("Reason: sometimes get work with wrong id")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: get-response sometimes finds hero with wrong id (actualId-1 or model to create without id)")})
+    @Flaky
     @Test
     void createGetHeroNoPhoneAndCheckCodeAndBody() throws InterruptedException {
         Superhero createHeroResponse = fluentSuperheroController.createHero(HERO_WITHOUT_PHONE)
@@ -141,7 +145,10 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero, get hero, check status code and response body")
-    @Tags({@Tag("smoke"), @Tag("API"), @Tag("will fail"), @Tag("Reason: phone becomes null after creation")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("will fail"), @Tag("Reason: phone becomes null after creation"),
+            @Tag("unstable"),
+            @Tag("Reason: get-response sometimes finds hero with different id(actualId-1 or model to create without id)")})
+    @Flaky
     @Test
     void createGetHeroAndCheckCodeAndBody() throws InterruptedException {
         Superhero createHeroResponse = fluentSuperheroController.createHero(BASIC_HERO)
@@ -161,7 +168,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero, get hero and check status code")
-    @Tags({@Tag("smoke"), @Tag("API"), @Tag("will fail"), @Tag("Reason: get sometimes finds hero with different id")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: get-response sometimes finds hero with different id(actualId-1 or model to create without id)")})
+    @Flaky
     @Test
     void createAndGetHero() throws InterruptedException {
         Superhero createHeroResponse = fluentSuperheroController.createHero(BASIC_HERO)
@@ -235,7 +244,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("get all heroes, check status code and response body")
-    @Tags({@Tag("smoke"), @Tag("API")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: get-response sometimes finds hero with different id(actualId-1 or model to create without id)")})
+    @Flaky
     @Test
     void getAllHeroesAndCheck() {
         Superhero ironMan =
@@ -250,7 +261,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero, update hero and check status code")
-    @Tags({@Tag("smoke"), @Tag("API"), @Tag("will fail"), @Tag("Reason: get sometimes finds hero with different id")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: update sometimes doesn't work because it can't find a hero with suitable id")})
+    @Flaky
     @Test
     void createAndUpdateHero() throws InterruptedException {
         Superhero heroToUpdate = Superhero.builder()
@@ -271,7 +284,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero, update hero, check status code and changes")
-    @Tags({@Tag("smoke"), @Tag("API"), @Tag("may fail"), @Tag("can't always find by id")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: update sometimes doesn't work because it can't find a hero with suitable id"),
+            @Tag("Reason: get-response sometimes finds hero with different id(actualId-1 or model to create without id)")})
     @Flaky
     @Test
     void createUpdateHeroAndCheckChanges() throws InterruptedException {
@@ -346,7 +361,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero, try to update hero with missing field and check status code")
-    @Tags({@Tag("smoke"), @Tag("API")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: update sometimes doesn't work because it can't find a hero with suitable id")})
+    @Flaky
     @Test
     void createAndUpdateHeroWithMissingField() throws InterruptedException {
         String expectedStatusValue = "500";
@@ -405,7 +422,9 @@ public class SuperheroTests {
     }
 
     @DisplayName("create a hero, delete it, check status code and get deleted hero after")
-    @Tags({@Tag("smoke"), @Tag("API")})
+    @Tags({@Tag("smoke"), @Tag("API"), @Tag("unstable"),
+            @Tag("Reason: get-response sometimes finds hero with wrong id (actualId-1 or create model without id)")})
+    @Flaky
     @Test
     void createDeleteHeroAndGetDeleted() throws InterruptedException {
         Superhero createdHeroResponse = fluentSuperheroController.createHero(BASIC_HERO)
@@ -428,7 +447,7 @@ public class SuperheroTests {
 
     @DisplayName("try to delete hero with non used ID")
     @Tags({@Tag("smoke"), @Tag("API"), @Tag("will fail"),
-            @Tag("Reason: delete works even if there is no hero under this id")})
+            @Tag("Reason: delete works even if there is no hero with this id")})
     @Test
     void createAndDeleteHeroWithNonUsedID() throws InterruptedException {
         SuperheroError expectedGerResponse =
@@ -444,7 +463,7 @@ public class SuperheroTests {
 
     @DisplayName("try to delete hero with invalid ID")
     @Tags({@Tag("smoke"), @Tag("API"), @Tag("will fail"),
-            @Tag("Reason: delete works even if there is no hero under this id")})
+            @Tag("Reason: delete works even if there is no hero with this id")})
     @Test
     void createAndDeleteHeroWithInvalidID() throws InterruptedException {
         SuperheroError expectedGerResponse =

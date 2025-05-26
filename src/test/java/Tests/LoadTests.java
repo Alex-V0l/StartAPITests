@@ -32,7 +32,7 @@ public class LoadTests {
         assertThat(downloadedFile).exists();
     }
 
-    private static void savePdf(Response response, String fileName) {
+    private void savePdf(Response response, String fileName) {
         if (response != null) {
 
             try (InputStream inputStream = response.getBody().asInputStream()) {
