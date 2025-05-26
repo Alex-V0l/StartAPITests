@@ -17,14 +17,4 @@ public class Superhero {
     private long id;
     private String mainSkill;
     private String phone;
-
-    public Superhero(Superhero hero) {
-        this.birthDate = hero.getBirthDate();
-        this.city = hero.getCity();
-        this.fullName = hero.getFullName();
-        this.gender = hero.getGender();
-        this.id = hero.getId();
-        this.mainSkill = hero.getMainSkill();
-        this.phone = hero.getPhone();
-    }
 }
