@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id("io.qameta.allure") version "2.12.0"
 }
 
 group = 'Vln'
@@ -11,7 +12,22 @@ repositories {
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.12.1'
+    testImplementation 'io.qameta.allure:allure-junit5:2.29.1'
+    implementation 'io.qameta.allure:allure-java-commons:2.29.1'
+    testImplementation 'io.qameta.allure:allure-rest-assured:2.29.1'
+    testImplementation 'io.rest-assured:rest-assured:5.5.1'
+    testImplementation 'com.fasterxml.jackson.core:jackson-core:2.19.0'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
+    testImplementation 'org.assertj:assertj-core:3.27.3'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    testCompileOnly 'org.projectlombok:lombok:1.18.32'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
 test {
